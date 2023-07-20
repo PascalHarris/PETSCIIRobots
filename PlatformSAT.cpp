@@ -96,6 +96,7 @@ static const char* sampleFilenames[] = {
 #endif
 
 static uint8_t standardControls[] = {
+0  // THIS IS A PLACEHOLDER
 /*    SDL_SCANCODE_I, // MOVE UP orig: 56 (8)
     SDL_SCANCODE_K, // MOVE DOWN orig: 50 (2)
     SDL_SCANCODE_J, // MOVE LEFT orig: 52 (4)
@@ -154,13 +155,13 @@ static uint16_t joystickButtons[] = {
 PlatformSAT::PlatformSAT() :
     interrupt(0),
 //    audioSpec({0}),
-    audioDeviceID(0),
+    //audioDeviceID(0),
 //    joystick(0),
     window(0),
-    windowSurface(0),
-    bufferSurface(0),
-    fadeSurface(0),
-    fontSurface(0),
+    //windowSurface(0),
+    //bufferSurface(0),
+    //fadeSurface(0),
+    //fontSurface(0),
 #ifdef PLATFORM_IMAGE_BASED_TILES
     tileSurface(0),
 #endif
@@ -250,9 +251,9 @@ PlatformSAT::PlatformSAT() :
 					(qd.screenBits.bounds.bottom - qd.screenBits.bounds.top - scrollSizeV) / 2);
 
 	if ( wrld.hasColorQD ) {
-		window = NewCWindow(nil, &zr, "\p", false, plainDBox, (WindowPtr)-1L, false, 0);
+		window = NewCWindow(nil, &zr, "\p", false, plainDBox, (WindowPtr )-1L, false, 0);
 	} else {
-		window = NewWindow(nil, &zr, "\p", false, plainDBox, (WindowPtr)-1L, false, 0); 
+		window = NewWindow(nil, &zr, "\p", false, plainDBox, (WindowPtr )-1L, false, 0); 
 	}
 /* end of SAT create window */
 
@@ -488,6 +489,7 @@ void PlatformSAT::chrout(uint8_t character)
 
 uint8_t PlatformSAT::readKeyboard()
 {
+  int result=0;
 /*    SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
@@ -536,8 +538,8 @@ uint8_t PlatformSAT::readKeyboard()
     }
 
     uint8_t result = keyToReturn;
-    keyToReturn = 0xff;
-    return result;*/
+    keyToReturn = 0xff;*/
+    return result;
 }
 
 void PlatformSAT::keyRepeat()
@@ -563,6 +565,7 @@ bool PlatformSAT::isKeyOrJoystickPressed(bool gamepad)
 
 uint16_t PlatformSAT::readJoystick(bool gamepad)
 {
+  int result=0;
 /*    uint16_t state = 0;
     int16_t leftStickX = SDL_JoystickGetAxis(joystick, 0);
     int16_t leftStickY = SDL_JoystickGetAxis(joystick, 1);
@@ -605,8 +608,8 @@ uint16_t PlatformSAT::readJoystick(bool gamepad)
     }
 
     uint16_t result = joystickStateToReturn;
-    joystickStateToReturn = 0;
-    return result; */
+    joystickStateToReturn = 0;*/
+    return result;
 }
 
 uint32_t PlatformSAT::load(const char* filename, uint8_t* destination, uint32_t size)
@@ -1282,19 +1285,21 @@ void PlatformSAT::stopNote()
 
 void PlatformSAT::renderFrame(bool)
 {
+/*
     if (cursorRect.h > 0) {
-/*        SDL_Rect rects[4] = {
+        SDL_Rect rects[4] = {
             { cursorRect.x, cursorRect.y, cursorRect.w, 2 },
             { cursorRect.x, cursorRect.y + 2, 2, cursorRect.h - 4 },
             { cursorRect.x + cursorRect.w - 2, cursorRect.y + 2, 2, cursorRect.h - 4 },
             { cursorRect.x, cursorRect.y + cursorRect.h - 2, cursorRect.w, 2 }
         };
-        SDL_FillRects(bufferSurface, rects, 4, 0xffffffff);*/
+        SDL_FillRects(bufferSurface, rects, 4, 0xffffffff);
 #ifdef PLATFORM_CURSOR_SHAPE_SUPPORT
         if (cursorShape != ShapeUse) {
             renderSprite(cursorShape == ShapeSearch ? 83 : 84, cursorRect.x + 2, cursorRect.y + 2);
         }
 #endif
+*/
     }
 
 /*    SDL_Rect bufferRect = { 0, 0, loadedImage == ImageGame ? PLATFORM_SCREEN_WIDTH : 320, loadedImage == ImageGame ? PLATFORM_SCREEN_HEIGHT : 200 };
@@ -1307,5 +1312,5 @@ void PlatformSAT::renderFrame(bool)
         SDL_FillRect(fadeSurface, &fadeRect, abgr);
         SDL_BlitScaled(fadeSurface, &fadeRect, windowSurface, &windowRect);
     }
-    SDL_UpdateWindowSurface(window);*/
-}
+    SDL_UpdateWindowSurface(window);
+}*/

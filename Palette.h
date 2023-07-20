@@ -3,6 +3,8 @@
 
 #include "Platform.h"
 
+#define __inline inline
+
 class Palette {
 public:
     static void initialize();
