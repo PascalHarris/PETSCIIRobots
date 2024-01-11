@@ -1,6 +1,5 @@
-#include <math.h>
-#define min(a,b) (a<b?a:b)
-#define max(a,b) (a<b?b:a)
+#include <cmath>
+#include <algorithm>
 #include "PT2.3A_replay_cia.h"
 
 /**************************************************
@@ -192,7 +191,7 @@ void mt_init(uint8_t* songData)
     mt_SongPos = 0;
     mt_PatternPos = 0;
 
-    ciataw = (float)floor(TimerValue / RealTempo);
+    ciataw = (float)std::floor(TimerValue / RealTempo);
     ciatar = ciataw;
 }
 
@@ -427,21 +426,21 @@ void mt_CheckEfx(AudioChannel& channel, ChanTemp& mt_chantemp)
     }
     switch (mt_chantemp.n_cmd.word & 0xf00) {
     case 0x000:
-        mt_Arpeggio(channel, mt_chantemp); return;
+        return mt_Arpeggio(channel, mt_chantemp);
     case 0x100:
-        mt_PortaUp(channel, mt_chantemp); return;
+        return mt_PortaUp(channel, mt_chantemp);
     case 0x200:
-        mt_PortaDown(channel, mt_chantemp); return;
+        return mt_PortaDown(channel, mt_chantemp);
     case 0x300:
-        mt_TonePortamento(channel, mt_chantemp); return;
+        return mt_TonePortamento(channel, mt_chantemp);
     case 0x400:
-        mt_Vibrato(channel, mt_chantemp); return;
+        return mt_Vibrato(channel, mt_chantemp);
     case 0x500:
-        mt_TonePlusVolSlide(channel, mt_chantemp); return;
+        return mt_TonePlusVolSlide(channel, mt_chantemp);
     case 0x600:
-        mt_VibratoPlusVolSlide(channel, mt_chantemp); return;
+        return mt_VibratoPlusVolSlide(channel, mt_chantemp);
     case 0xe00:
-        mt_E_Commands(channel, mt_chantemp); return;
+        return mt_E_Commands(channel, mt_chantemp);
     default:
         mt_PerNop(channel, mt_chantemp);
         if ((mt_chantemp.n_cmd.word & 0xf00) == 0x700) {
@@ -532,7 +531,7 @@ void mt_SetTonePorta(AudioChannel& channel, ChanTemp& mt_chantemp)
     int periodOffset = mt_chantemp.n_finetune * 36;
     int periodIndex = 0;
     for (; note < mt_PeriodTable[periodOffset + periodIndex] && periodIndex < 36; periodIndex++);
-    periodIndex = min(periodIndex, 35);
+    periodIndex = std::min(periodIndex, 35);
     uint8_t finetune = mt_chantemp.n_finetune & 8;
     if (finetune != 0 && periodIndex != 0) {
         periodIndex--;
@@ -578,7 +577,7 @@ void mt_TonePortNoChange(AudioChannel& channel, ChanTemp& mt_chantemp)
         int periodOffset = mt_chantemp.n_finetune * 36;
         int periodIndex = 0;
         for (; period < mt_PeriodTable[periodOffset + periodIndex] && periodIndex < 36; periodIndex++);
-        periodIndex = min(periodIndex, 35);
+        periodIndex = std::min(periodIndex, 35);
         period = mt_PeriodTable[periodOffset + periodIndex];
     }
 
@@ -668,9 +667,9 @@ void mt_Tremolo(AudioChannel& channel, ChanTemp& mt_chantemp)
     }
     uint8_t depth = mt_chantemp.n_tremolocmd & 0x0f;
     value = (value * depth) / 64;
-    channel.volume = min(
+    channel.volume = std::min(
         0x40,
-        max(
+        std::max(
             0,
             mt_chantemp.n_volume + (mt_chantemp.n_tremolopos < 128 ? value : -value)
             )
@@ -731,7 +730,7 @@ void mt_PositionJump(AudioChannel& channel, ChanTemp& mt_chantemp)
 
 void mt_VolumeChange(AudioChannel& channel, ChanTemp& mt_chantemp)
 {
-    mt_chantemp.n_volume = min(mt_chantemp.n_cmd.byte[0], (uint8_t)0x40);
+    mt_chantemp.n_volume = std::min(mt_chantemp.n_cmd.byte[0], (uint8_t)0x40);
     channel.volume = mt_chantemp.n_volume;
 }
 
@@ -748,7 +747,7 @@ void mt_SetSpeed(AudioChannel& channel, ChanTemp& mt_chantemp)
         mt_end();
     } else if (mt_chantemp.n_cmd.byte[0] >= 32) {
         RealTempo = mt_chantemp.n_cmd.byte[0];
-        ciataw = (float)floor(TimerValue / RealTempo);
+        ciataw = (float)std::floor(TimerValue / RealTempo);
     } else {
         mt_counter = 0;
         mt_speed = mt_chantemp.n_cmd.byte[0];
@@ -760,19 +759,19 @@ void mt_CheckMoreEfx(AudioChannel& channel, ChanTemp& mt_chantemp)
     mt_UpdateFunk(channel, mt_chantemp);
     switch (mt_chantemp.n_cmd.word & 0xf00) {
     case 0x900:
-        mt_SampleOffset(channel, mt_chantemp); return;
+        return mt_SampleOffset(channel, mt_chantemp);
     case 0xb00:
-        mt_PositionJump(channel, mt_chantemp); return;
+        return mt_PositionJump(channel, mt_chantemp);
     case 0xd00:
-        mt_PatternBreak(channel, mt_chantemp); return;
+        return mt_PatternBreak(channel, mt_chantemp);
     case 0xe00:
-        mt_E_Commands(channel, mt_chantemp); return;
+        return mt_E_Commands(channel, mt_chantemp);
     case 0xf00:
-        mt_SetSpeed(channel, mt_chantemp); return;
+        return mt_SetSpeed(channel, mt_chantemp);
     case 0xc00:
-        mt_VolumeChange(channel, mt_chantemp); return;
+        return mt_VolumeChange(channel, mt_chantemp);
     default:
-        mt_PerNop(channel, mt_chantemp); return;
+        return mt_PerNop(channel, mt_chantemp);
     }
 }
 
@@ -780,35 +779,35 @@ void mt_E_Commands(AudioChannel& channel, ChanTemp& mt_chantemp)
 {
     switch (mt_chantemp.n_cmd.byte[0] & 0xf0) {
     case 0x00:
-        mt_FilterOnOff(channel, mt_chantemp); return;
+        return mt_FilterOnOff(channel, mt_chantemp);
     case 0x10:
-        mt_FinePortaUp(channel, mt_chantemp); return;
+        return mt_FinePortaUp(channel, mt_chantemp);
     case 0x20:
-        mt_FinePortaDown(channel, mt_chantemp); return;
+        return mt_FinePortaDown(channel, mt_chantemp);
     case 0x30:
-        mt_SetGlissControl(channel, mt_chantemp); return;
+        return mt_SetGlissControl(channel, mt_chantemp);
     case 0x40:
-        mt_SetVibratoControl(channel, mt_chantemp); return;
+        return mt_SetVibratoControl(channel, mt_chantemp);
     case 0x50:
-        mt_SetFineTune(channel, mt_chantemp); return;
+        return mt_SetFineTune(channel, mt_chantemp);
     case 0x60:
-        mt_JumpLoop(channel, mt_chantemp); return;
+        return mt_JumpLoop(channel, mt_chantemp);
     case 0x70:
-        mt_SetTremoloControl(channel, mt_chantemp); return;
+        return mt_SetTremoloControl(channel, mt_chantemp);
     case 0x90:
-        mt_RetrigNote(channel, mt_chantemp); return;
+        return mt_RetrigNote(channel, mt_chantemp);
     case 0xa0:
-        mt_VolumeFineUp(channel, mt_chantemp); return;
+        return mt_VolumeFineUp(channel, mt_chantemp);
     case 0xb0:
-        mt_VolumeFineDown(channel, mt_chantemp); return;
+        return mt_VolumeFineDown(channel, mt_chantemp);
     case 0xc0:
-        mt_NoteCut(channel, mt_chantemp); return;
+        return mt_NoteCut(channel, mt_chantemp);
     case 0xd0:
-        mt_NoteDelay(channel, mt_chantemp); return;
+        return mt_NoteDelay(channel, mt_chantemp);
     case 0xe0:
-        mt_PatternDelay(channel, mt_chantemp); return;
+        return mt_PatternDelay(channel, mt_chantemp);
     case 0xf0:
-        mt_FunkIt(channel, mt_chantemp); return;
+        return mt_FunkIt(channel, mt_chantemp);
     default:
         break;
     }

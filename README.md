@@ -1,19 +1,3 @@
-# PETSCIIRobots
-The start of a port of PETSCIIRobots, by David Murray, to the 68k Macintosh. This work is based on the SDL port by Vesa Halttunen <vesuri@jormas.com>. 
+The ongoing result of a challenge:
 
-# About
-- petrobots.cpp is the main game logic ported line by line from the 6502 files PETROBOTS.ASM and BACKGROUND_TASKS.ASM
-- Platform.h is essentially an interface with platform specific implementation classes
-- Various #defines starting with PLATFORM_ can be used to build a variant with different features using the same platform implementation
-- To port to a new platform, create a new PlatformXYZ.cpp/h implementation based on the existing ones and instantiate it in main() (petrobots.cpp)
-
-# Building
-This work doesn't currently build, but work on it is being carried out using Symantec Think C++.  SDL will be replaced with Ingemar Ragnemalm's [Sprite Animateion toolkit](http://www.lysator.liu.se/~ingemar/sat.html) 
-
-# License
-This work inherits the license of the work on which it is based. 
-
-This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
-
-#TODO
-Create a PlatformSAT.cpp/h file using Sprite Animation Toolkit.
+So let's talk about the elephant in the room. Attack of the PETSCII Robots. I can play it on my Mac - but only by using the Apple II card in my LCIII. Not the best experience possible. And PETSCII Robots has been ported to many different systems - including ones with a 68000CPU (Amiga), and ones with a black and white only screen (or, at least, black and white for the purposes of in-game graphics). The Mac is ripe for a conversion - and, given the specifications of the Mac vs those of the other computers that it's been ported to, a Mac colour version would be the most spectacular version of the game bar none.
